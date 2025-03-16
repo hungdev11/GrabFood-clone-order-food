@@ -1,0 +1,22 @@
+package com.api.dto.request;
+
+import com.api.model.Account;
+import com.api.model.Address;
+import lombok.*;
+
+import java.time.LocalTime;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+public class AddRestaurantRequest {
+    private String name;
+    private String image;
+    private LocalTime openingHour;
+    private LocalTime closingHour;
+    private String description;
+    private AddressRequest address;
+    private String username;
+    private String password;
+}

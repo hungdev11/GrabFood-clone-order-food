@@ -5,8 +5,13 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 public enum ErrorCode {
-    SOME_THING_WENT_WRONG(9999, "Not OK", HttpStatus.BAD_REQUEST);
+    SOME_THING_WENT_WRONG(9999, "Not OK", HttpStatus.BAD_REQUEST),
+    RESOURCE_NOT_FOUND(404, "Not Found", HttpStatus.NOT_FOUND),
+    ACCOUNT_USERNAME_DUPLICATED(0000, "Username of an account is duplicated", HttpStatus.BAD_REQUEST),
+    ACCOUNT_USERNAME_NOT_EXISTED(0001, "Username of an account not found", HttpStatus.BAD_REQUEST),
+    ACCOUNT_PASSWORD_NOT_MATCH(0002, "Wrong password", HttpStatus.BAD_REQUEST),
 
+    ;
     private final int code;
     private final String message;
     private final HttpStatus statusCode;

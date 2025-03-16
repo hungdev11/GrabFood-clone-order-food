@@ -2,15 +2,19 @@ package com.api.model;
 
 import com.api.utils.RestaurantStatus;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
 @Entity
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "restaurant")
 public class Restaurant extends BaseEntity {
 
