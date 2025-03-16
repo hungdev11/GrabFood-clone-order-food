@@ -1,6 +1,6 @@
 package com.api.model;
 
-import com.api.utility.FoodStatus;
+import com.api.utils.FoodStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 

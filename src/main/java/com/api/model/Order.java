@@ -1,6 +1,6 @@
 package com.api.model;
 
-import com.api.utility.OrderStatus;
+import com.api.utils.OrderStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 

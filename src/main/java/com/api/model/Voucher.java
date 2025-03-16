@@ -1,7 +1,7 @@
 package com.api.model;
 
-import com.api.utility.VoucherStatus;
-import com.api.utility.VoucherType;
+import com.api.utils.VoucherStatus;
+import com.api.utils.VoucherType;
 import jakarta.persistence.*;
 import lombok.Data;
 

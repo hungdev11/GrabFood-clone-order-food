@@ -1,4 +1,4 @@
-package com.api.utility;
+package com.api.utils;
 
 public enum RestaurantStatus {
     ACTIVE, INACTIVE
