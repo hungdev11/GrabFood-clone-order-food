@@ -11,7 +11,7 @@ import java.util.List;
 
 @Data
 @Entity
-@Table(name = "orders")
+@Table(name = "orders") // order conflict with ORDER in mysql
 public class Order extends BaseEntity{
 
     @ManyToOne
@@ -41,4 +41,7 @@ public class Order extends BaseEntity{
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CartDetail> cartDetails = new ArrayList<>();
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderVoucher> orderVoucherList = new ArrayList<>();
 }
