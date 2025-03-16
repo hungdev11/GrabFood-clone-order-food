@@ -5,9 +5,9 @@ import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name = "tai_khoan")
+@Table(name = "account")
 @Data
-public class TaiKhoan extends BaseEntity {
+public class Account extends BaseEntity {
     private String username;
-    private String matKhau;
+    private String password;
 }

@@ -1,5 +1,5 @@
 package com.api.utility;
 
-public enum TrangThaiNhaHang {
+public enum VoucherStatus {
     ACTIVE, INACTIVE
 }
