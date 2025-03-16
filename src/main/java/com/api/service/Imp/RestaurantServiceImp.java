@@ -2,6 +2,7 @@ package com.api.service.Imp;
 
 import com.api.dto.request.AddRestaurantRequest;
 import com.api.dto.request.AddressRequest;
+import com.api.exception.AppException;
 import com.api.model.Restaurant;
 import com.api.repository.RestaurantRepository;
 import com.api.service.AccountService;
@@ -51,5 +52,12 @@ public class RestaurantServiceImp implements RestaurantService {
         newRestaurant.setStatus(RestaurantStatus.ACTIVE);
         log.info("Persist Restaurant");
         return restaurantRepository.save(newRestaurant).getId();
+    }
+
+    @Override
+    public Restaurant getRestaurant(long id) {
+        return restaurantRepository.findById(id).orElseThrow( () -> {
+            return new AppException();
+        });
     }
 }

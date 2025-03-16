@@ -1,29 +1,27 @@
 package com.api.controller;
 
+import com.api.dto.request.AddFoodTypeRequest;
 import com.api.dto.request.AddRestaurantRequest;
 import com.api.dto.response.ApiResponse;
-import com.api.service.RestaurantService;
+import com.api.service.FoodTypeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/restaurants")
-public class RestaurantController {
-    private final RestaurantService restaurantService;
+@RequestMapping("/food-type")
+public class FoodTypeController {
+    private final FoodTypeService foodTypeService;
 
     @PostMapping
-    public ApiResponse<Long> addNewRestaurant(@RequestBody AddRestaurantRequest newRestaurant) {
+    public ApiResponse<Long> addNewFoodType(@RequestParam String name) {
         try {
             return ApiResponse.<Long>builder()
                     .code(200)
                     .message("Success")
-                    .data(restaurantService.addRestaurant(newRestaurant))
+                    .data(foodTypeService.addNewFoodType(name))
                     .build();
         } catch (Exception e) {
             return ApiResponse.<Long>builder()

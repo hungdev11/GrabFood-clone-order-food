@@ -1,14 +1,19 @@
 package com.api.model;
 
+import com.api.utils.FoodKind;
 import com.api.utils.FoodStatus;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
 @Entity
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "food")
 public class Food extends BaseEntity {
 
@@ -23,6 +28,10 @@ public class Food extends BaseEntity {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private FoodStatus status;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private FoodKind kind;
 
     @ManyToOne
     @JoinColumn(name = "type_id", nullable = false)
@@ -40,6 +49,5 @@ public class Food extends BaseEntity {
 
     @OneToMany(mappedBy = "food", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CartDetail> cartDetails = new ArrayList<>();
-    //giam gia
 }
 
