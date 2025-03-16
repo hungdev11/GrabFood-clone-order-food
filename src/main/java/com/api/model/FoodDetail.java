@@ -15,8 +15,10 @@ public class FoodDetail extends BaseEntity{
     @Column(nullable = false, precision = 9, scale = 2) //example: 9.999.999,99
     private BigDecimal price;
 
+    @Column(nullable = false)
     private LocalDateTime startTime;
 
+    @Column(nullable = false)
     private LocalDateTime endTime;
 
     @ManyToOne

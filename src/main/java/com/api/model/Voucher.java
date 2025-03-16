@@ -12,11 +12,20 @@ import java.util.List;
 @Data
 @Entity
 @Table
-public class Voucher extends BaseEntity{
+public class Voucher extends BaseEntity {
     private String description;
+
+    @Column(nullable = false)
     private int quantity;
+
     private BigDecimal minRequire;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private VoucherType type;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private VoucherStatus status;
 
     @ManyToOne

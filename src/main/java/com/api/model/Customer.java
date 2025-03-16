@@ -9,14 +9,20 @@ import java.util.List;
 
 @Data
 @Entity
-@Table
+@Table(uniqueConstraints = {
+        @UniqueConstraint(columnNames = "email"),
+        @UniqueConstraint(columnNames = "phone")
+})
 public class Customer extends BaseEntity{
     @Column(nullable = false)
     private String name;
+
     @Column(nullable = false)
     private String email;
+
     @Column(nullable = false)
     private String phone;
+
     @Column(nullable = false)
     private LocalDate createDate;
 

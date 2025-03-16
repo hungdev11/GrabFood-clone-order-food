@@ -33,6 +33,7 @@ public class Restaurant extends BaseEntity {
     private String description;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private RestaurantStatus status;
 
     @OneToOne(cascade = CascadeType.ALL)

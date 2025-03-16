@@ -32,6 +32,7 @@ public class Order extends BaseEntity{
     private LocalDateTime orderDate;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
     private String note;

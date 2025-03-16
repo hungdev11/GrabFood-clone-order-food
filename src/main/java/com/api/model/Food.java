@@ -14,10 +14,14 @@ public class Food extends BaseEntity {
 
     @Column(nullable = false)
     private String name;
+
     @Column(nullable = false)
     private String image;
+
     private String description;
+
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private FoodStatus status;
 
     @ManyToOne
