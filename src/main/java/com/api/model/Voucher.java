@@ -3,7 +3,7 @@ package com.api.model;
 import com.api.utils.VoucherStatus;
 import com.api.utils.VoucherType;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -12,6 +12,11 @@ import java.util.List;
 @Data
 @Entity
 @Table
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Voucher extends BaseEntity {
     private String description;
 
