@@ -14,7 +14,11 @@ public enum ErrorCode {
     //FOOD - FOOD TYPE
     FOODTYPE_NAME_EXISTED(0050, "Type of food is already existed", HttpStatus.BAD_REQUEST),
     FOODTYPE_NAME_NOT_EXISTED(0051, "Type of food not found", HttpStatus.BAD_REQUEST),
-
+    FOOD_OF_RETAURANT_EXISTED(0052, "Food type and kind of retaurant already existed", HttpStatus.BAD_REQUEST),
+    FOOD_PRICE_REDUNDANT(0053, "Food price redundant", HttpStatus.BAD_REQUEST),
+    FOOD_RESTAURANT_NOT_FOUND(0054, "Food not belong to restaurant", HttpStatus.BAD_REQUEST),
+    FOOD_NOT_FOUND(0055, "Food not found", HttpStatus.BAD_REQUEST),
+    FOOD_DETAIL_CONFLICT_PRICE(0056, "Food price conflict", HttpStatus.BAD_REQUEST),
     //RESTAURANT
     RESTAURANT_NOT_FOUND(0100, "Restaurant not found", HttpStatus.BAD_REQUEST),
 

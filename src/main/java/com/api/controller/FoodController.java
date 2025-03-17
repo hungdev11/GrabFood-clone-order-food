@@ -1,6 +1,7 @@
 package com.api.controller;
 
 import com.api.dto.request.AddFoodRequest;
+import com.api.dto.request.AdjustFoodPriceRequest;
 import com.api.dto.response.ApiResponse;
 import com.api.service.FoodService;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,15 @@ public class FoodController {
                 .code(200)
                 .message("Success")
                 .data(foodService.addFood(newFood))
+                .build();
+    }
+
+    @PostMapping("/adjust-price")
+    public ApiResponse<Long> adjustFoodPrice(@RequestBody AdjustFoodPriceRequest request) {
+        return ApiResponse.<Long>builder()
+                .code(200)
+                .message("Success")
+                .data(foodService.adjustFoodPrice(request))
                 .build();
     }
 

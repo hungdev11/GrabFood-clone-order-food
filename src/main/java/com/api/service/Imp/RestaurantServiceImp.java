@@ -58,6 +58,7 @@ public class RestaurantServiceImp implements RestaurantService {
     @Override
     public Restaurant getRestaurant(long id) {
         return restaurantRepository.findById(id).orElseThrow( () -> {
+            log.info("Restaurant not found");
             return new AppException(ErrorCode.RESTAURANT_NOT_FOUND);
         });
     }
