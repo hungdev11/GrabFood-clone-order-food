@@ -33,7 +33,7 @@ public class FoodTypeServiceImp implements FoodTypeService {
     public FoodType getFoodTypeByName(String name) {
         return foodTypeRepository.findByName(name).orElseThrow( () -> {
             log.info("FoodType with name " + name + " does not exist");
-            return new AppException();
+            return new AppException(ErrorCode.FOODTYPE_NAME_NOT_EXISTED);
         });
     }
 }

@@ -19,17 +19,10 @@ public class RestaurantController {
 
     @PostMapping
     public ApiResponse<Long> addNewRestaurant(@RequestBody AddRestaurantRequest newRestaurant) {
-        try {
-            return ApiResponse.<Long>builder()
-                    .code(200)
-                    .message("Success")
-                    .data(restaurantService.addRestaurant(newRestaurant))
-                    .build();
-        } catch (Exception e) {
-            return ApiResponse.<Long>builder()
-                    .code(400)
-                    .message("Failure")
-                    .build();
-        }
+        return ApiResponse.<Long>builder()
+                .code(200)
+                .message("Success")
+                .data(restaurantService.addRestaurant(newRestaurant))
+                .build();
     }
 }

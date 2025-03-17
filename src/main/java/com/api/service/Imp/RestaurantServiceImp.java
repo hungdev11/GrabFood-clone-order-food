@@ -3,6 +3,7 @@ package com.api.service.Imp;
 import com.api.dto.request.AddRestaurantRequest;
 import com.api.dto.request.AddressRequest;
 import com.api.exception.AppException;
+import com.api.exception.ErrorCode;
 import com.api.model.Restaurant;
 import com.api.repository.RestaurantRepository;
 import com.api.service.AccountService;
@@ -57,7 +58,7 @@ public class RestaurantServiceImp implements RestaurantService {
     @Override
     public Restaurant getRestaurant(long id) {
         return restaurantRepository.findById(id).orElseThrow( () -> {
-            return new AppException();
+            return new AppException(ErrorCode.RESTAURANT_NOT_FOUND);
         });
     }
 }

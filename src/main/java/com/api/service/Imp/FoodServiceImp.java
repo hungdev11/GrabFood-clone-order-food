@@ -2,6 +2,7 @@ package com.api.service.Imp;
 
 import com.api.dto.request.AddFoodRequest;
 import com.api.model.Food;
+import com.api.model.FoodDetail;
 import com.api.model.FoodType;
 import com.api.model.Restaurant;
 import com.api.repository.FoodRepository;
@@ -14,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -25,21 +28,33 @@ public class FoodServiceImp implements FoodService {
     @Override
     @Transactional
     public long addFood(AddFoodRequest request) {
-//        Restaurant restaurant = restaurantService.getRestaurant(request.getRestaurant_id());
-//
-//        FoodType foodType = foodTypeService.getFoodTypeByName(request.getType());
-//
-//        Food newFood = Food.builder()
-//                .name(request.getName())
-//                .description(request.getDescription())
-//                .kind(request.getKind())
-//                .image(request.getImage())
-//                .type(foodType)
-//                .status(FoodStatus.ACTIVE)
-//                .restaurant(restaurant)
-//                .build();
-//        foodRepository.save(newFood);
-//        foodType.getFoods().add(newFood);
-        return 0;
+        Restaurant restaurant = restaurantService.getRestaurant(request.getRestaurant_id());
+        FoodType foodType = foodTypeService.getFoodTypeByName(request.getType());
+
+        Food newFood = Food.builder()
+                .name(request.getName())
+                .description(request.getDescription())
+                .kind(request.getKind())
+                .image(request.getImage())
+                .type(foodType)
+                .status(FoodStatus.ACTIVE)
+                .restaurant(restaurant)
+                .build();
+
+        newFood = foodRepository.save(newFood);
+
+        FoodDetail foodDetail = FoodDetail.builder()
+                .price(request.getPrice())
+                .startTime(LocalDateTime.now())
+                .endTime(null)
+                .food(newFood)
+                .build();
+        newFood.getFoodDetails().add(foodDetail);
+
+        foodType.getFoods().add(newFood);
+        restaurant.getFoods().add(newFood);
+
+        return newFood.getId();
     }
+
 }

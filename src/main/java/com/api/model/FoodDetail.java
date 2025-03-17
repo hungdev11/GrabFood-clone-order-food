@@ -1,24 +1,28 @@
 package com.api.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 import org.hibernate.annotations.Check;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@Data
 @Entity
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "food_detail")
 public class FoodDetail extends BaseEntity{
 
     @Column(nullable = false, precision = 9, scale = 2) //example: 9.999.999,99
     private BigDecimal price;
 
-    @Column(nullable = false)
+    @Column(name = "start_time", nullable = false)
     private LocalDateTime startTime;
 
-    @Column(nullable = false)
+    @Column(name = "end_time")
     private LocalDateTime endTime;
 
     @ManyToOne

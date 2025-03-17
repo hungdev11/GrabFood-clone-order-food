@@ -11,23 +11,16 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/food-type")
+@RequestMapping("/food-types")
 public class FoodTypeController {
     private final FoodTypeService foodTypeService;
 
     @PostMapping
     public ApiResponse<Long> addNewFoodType(@RequestParam String name) {
-        try {
-            return ApiResponse.<Long>builder()
-                    .code(200)
-                    .message("Success")
-                    .data(foodTypeService.addNewFoodType(name))
-                    .build();
-        } catch (Exception e) {
-            return ApiResponse.<Long>builder()
-                    .code(400)
-                    .message("Failure")
-                    .build();
-        }
+        return ApiResponse.<Long>builder()
+                .code(200)
+                .message("Success")
+                .data(foodTypeService.addNewFoodType(name))
+                .build();
     }
 }
