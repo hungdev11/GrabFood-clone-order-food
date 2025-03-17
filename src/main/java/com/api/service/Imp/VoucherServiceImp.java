@@ -1,6 +1,8 @@
 package com.api.service.Imp;
 
 import com.api.dto.request.VoucherRequest;
+import com.api.exception.AppException;
+import com.api.exception.ErrorCode;
 import com.api.mapper.Imp.VoucherMapperImp;
 import com.api.mapper.VoucherMapper;
 import com.api.model.Restaurant;
@@ -31,6 +33,9 @@ public class VoucherServiceImp implements VoucherService {
 
     @Override
     public Voucher getVoucherbyId(long id) {
-        return null;
+        return voucherRepository.findById(id).orElseThrow(() -> {
+            log.info("Voucher not found");
+            return new AppException(ErrorCode.VOUCHER_NOT_FOUND);
+        });
     }
 }
