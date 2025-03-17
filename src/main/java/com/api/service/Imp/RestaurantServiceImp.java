@@ -31,6 +31,8 @@ public class RestaurantServiceImp implements RestaurantService {
         Restaurant newRestaurant = Restaurant.builder()
                 .name(request.getName())
                 .image(request.getImage())
+                .phone(request.getPhone())
+                .email(request.getEmail())
                 .openingHour(request.getOpeningHour())
                 .closingHour(request.getClosingHour())
                 .description(request.getDescription())

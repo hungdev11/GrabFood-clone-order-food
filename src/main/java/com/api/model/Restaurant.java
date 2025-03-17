@@ -15,7 +15,9 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "restaurant")
+@Table(name = "restaurant", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "email")
+})
 public class Restaurant extends BaseEntity {
 
     @Column(columnDefinition = "VARCHAR(30)", nullable = false)
@@ -23,6 +25,12 @@ public class Restaurant extends BaseEntity {
 
     @Column(nullable = false)
     private String image;
+
+    @Column(nullable = false)
+    private String phone;
+
+    @Column(nullable = false)
+    private String email;
 
     @Column(nullable = false, name = "opening_hour")
     private LocalTime openingHour;

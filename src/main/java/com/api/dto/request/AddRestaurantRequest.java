@@ -13,6 +13,8 @@ import java.time.LocalTime;
 public class AddRestaurantRequest {
     private String name;
     private String image;
+    private String phone;
+    private String email;
     private LocalTime openingHour;
     private LocalTime closingHour;
     private String description;
