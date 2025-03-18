@@ -1,7 +1,5 @@
 package com.api.dto.request;
 
-import com.api.model.Account;
-import com.api.model.Address;
 import lombok.*;
 
 import java.time.LocalTime;

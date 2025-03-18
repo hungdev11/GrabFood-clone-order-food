@@ -2,7 +2,7 @@ package com.api.service.Imp;
 
 import com.api.exception.AppException;
 import com.api.exception.ErrorCode;
-import com.api.model.Account;
+import com.api.entity.Account;
 import com.api.repository.AccountRepository;
 import com.api.service.AccountService;
 import jakarta.transaction.Transactional;

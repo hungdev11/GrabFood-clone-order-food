@@ -1,9 +1,8 @@
 package com.api.service.Imp;
 
-import com.api.dto.request.AddFoodTypeRequest;
 import com.api.exception.AppException;
 import com.api.exception.ErrorCode;
-import com.api.model.FoodType;
+import com.api.entity.FoodType;
 import com.api.repository.FoodTypeRepository;
 import com.api.service.FoodTypeService;
 import jakarta.transaction.Transactional;

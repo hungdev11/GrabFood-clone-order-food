@@ -1,9 +1,6 @@
 package com.api.service;
 
-import com.api.dto.request.AddFoodTypeRequest;
-import com.api.model.FoodType;
-
-import java.util.Optional;
+import com.api.entity.FoodType;
 
 public interface FoodTypeService {
     long addNewFoodType(String name);

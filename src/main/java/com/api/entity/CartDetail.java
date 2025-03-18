@@ -1,8 +1,7 @@
-package com.api.model;
+package com.api.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import org.hibernate.annotations.Check;
 
 
 @Data

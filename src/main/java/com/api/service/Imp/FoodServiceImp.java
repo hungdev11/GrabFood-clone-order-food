@@ -4,12 +4,11 @@ import com.api.dto.request.AddFoodRequest;
 import com.api.dto.request.AdjustFoodPriceRequest;
 import com.api.exception.AppException;
 import com.api.exception.ErrorCode;
-import com.api.model.Food;
-import com.api.model.FoodDetail;
-import com.api.model.FoodType;
-import com.api.model.Restaurant;
+import com.api.entity.Food;
+import com.api.entity.FoodDetail;
+import com.api.entity.FoodType;
+import com.api.entity.Restaurant;
 import com.api.repository.FoodRepository;
-import com.api.repository.FoodTypeRepository;
 import com.api.service.FoodService;
 import com.api.service.FoodTypeService;
 import com.api.service.RestaurantService;
@@ -20,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.Comparator;
 
 @Service

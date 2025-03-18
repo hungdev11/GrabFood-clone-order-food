@@ -3,7 +3,7 @@ package com.api.service.Imp;
 import com.api.dto.request.AddressRequest;
 import com.api.exception.AppException;
 import com.api.exception.ErrorCode;
-import com.api.model.Address;
+import com.api.entity.Address;
 import com.api.repository.AddressRepository;
 import com.api.service.AddressService;
 import jakarta.transaction.Transactional;

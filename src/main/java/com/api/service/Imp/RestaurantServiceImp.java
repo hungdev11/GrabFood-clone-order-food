@@ -4,7 +4,7 @@ import com.api.dto.request.AddRestaurantRequest;
 import com.api.dto.request.AddressRequest;
 import com.api.exception.AppException;
 import com.api.exception.ErrorCode;
-import com.api.model.Restaurant;
+import com.api.entity.Restaurant;
 import com.api.repository.RestaurantRepository;
 import com.api.service.AccountService;
 import com.api.service.AddressService;

@@ -1,4 +1,4 @@
-package com.api.model;
+package com.api.entity;
 
 import com.api.utils.FoodKind;
 import com.api.utils.FoodStatus;
