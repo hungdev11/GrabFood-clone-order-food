@@ -21,6 +21,8 @@ public class VoucherResponse {
 
     private VoucherType type;
 
+    private BigDecimal value;
+
     private VoucherStatus status;
 
     private String restaurant_name;

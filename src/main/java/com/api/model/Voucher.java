@@ -29,12 +29,15 @@ public class Voucher extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private VoucherType type;
 
+    @Column(nullable = false, precision = 7) //example: 9.999.999,99
+    private BigDecimal value;
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private VoucherStatus status;
 
     @ManyToOne
-    @JoinColumn(name = "restaurant_id", nullable = false)
+    @JoinColumn(name = "restaurant_id", nullable = true)
     private Restaurant restaurant;
 
     @OneToMany(mappedBy = "voucher", cascade = CascadeType.ALL, orphanRemoval = true)
