@@ -20,8 +20,8 @@ public class VoucherController {
     private final VoucherService voucherService;
 
     @PostMapping
-    public ApiResponse<VoucherResponse> addNewVoucher(@Validated @RequestBody VoucherRequest request) {
-        return ApiResponse.<VoucherResponse>builder()
+    public ApiResponse<Long> addNewVoucher(@Validated @RequestBody VoucherRequest request) {
+        return ApiResponse.<Long>builder()
                 .code(200)
                 .message("Success")
                 .data(voucherService.addVoucher(request))
