@@ -22,8 +22,9 @@ public class AccountServiceImp implements AccountService {
     @Override
     @Transactional
     public long addNewAccount(String username, String password) {
+        log.info("Add new account");
         if (this.IsUsernameExisted(username)) {
-            log.error("Account already exists with username: " + username);
+            log.error("Account already exists with username {} ", username);
             throw new AppException(ErrorCode.ACCOUNT_USERNAME_DUPLICATED);
         }
         Account createdAccount = accountRepository.save(Account.builder()
@@ -35,8 +36,9 @@ public class AccountServiceImp implements AccountService {
 
     @Override
     public void checkAccount(String username, String password) {
+        log.info("Check account");
         if (!this.IsUsernameExisted(username)) {
-            log.error("Username doesn't existed: " + username);
+            log.error("Username {} doesn't existed", username);
             throw new AppException(ErrorCode.ACCOUNT_USERNAME_NOT_EXISTED);
         }
         boolean isPasswordValid = passwordEncoder.matches(password, passwordEncoder.encode(password));
@@ -48,15 +50,16 @@ public class AccountServiceImp implements AccountService {
 
     @Override
     public Account getAccountById(long id) {
+        log.info("Get account");
         return accountRepository.findById(id)
                 .orElseThrow(() -> {
-                    log.error("Account doesn't existed: " + id);
+                    log.error("Account id {} doesn't existed: ", id);
                     return new AppException(ErrorCode.RESOURCE_NOT_FOUND);
                 });
     }
 
-
     private boolean IsUsernameExisted(String username) {
+        log.info("Check if username {} exists", username);
         return accountRepository.existsByUsername(username);
     }
 }

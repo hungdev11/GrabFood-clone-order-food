@@ -2,6 +2,8 @@ package com.api.service.Imp;
 
 import com.api.dto.request.AddRestaurantRequest;
 import com.api.dto.request.AddressRequest;
+import com.api.dto.response.RestaurantResponse;
+import com.api.entity.Address;
 import com.api.exception.AppException;
 import com.api.exception.ErrorCode;
 import com.api.entity.Restaurant;
@@ -14,6 +16,9 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.StringJoiner;
 
 @Service
 @RequiredArgsConstructor
@@ -38,10 +43,8 @@ public class RestaurantServiceImp implements RestaurantService {
                 .description(request.getDescription())
                 .build();
 
-        log.info("Create account");
         long accountId = accountService.addNewAccount(request.getUsername(), request.getPassword());
 
-        log.info("Create address");
         long addressId = addressService.addNewAddress(AddressRequest.builder()
                         .ward(request.getAddress().getWard())
                         .district(request.getAddress().getDistrict())
@@ -51,17 +54,43 @@ public class RestaurantServiceImp implements RestaurantService {
         log.info("Add Restaurant address and account");
         newRestaurant.setAccount(accountService.getAccountById(accountId));
         newRestaurant.setAddress(addressService.getAddressById(addressId));
-
         newRestaurant.setStatus(RestaurantStatus.ACTIVE);
+
         log.info("Persist Restaurant");
         return restaurantRepository.save(newRestaurant).getId();
     }
 
     @Override
     public Restaurant getRestaurant(long id) {
+        log.info("Get Restaurant: {}", id);
         return restaurantRepository.findById(id).orElseThrow( () -> {
-            log.info("Restaurant not found");
+            log.error("Restaurant id {} not found", id);
             return new AppException(ErrorCode.RESTAURANT_NOT_FOUND);
         });
+    }
+
+    @Override
+    public RestaurantResponse getRestaurantResponse(long id) {
+        log.info("Get Restaurant response: {}", id);
+        Restaurant restaurant = getRestaurant(id);
+        return RestaurantResponse.builder()
+                .name(restaurant.getName())
+                .address(getAddressText(restaurant.getAddress()))
+                .image(restaurant.getImage())
+                .description(restaurant.getDescription())
+                .openingHour(restaurant.getOpeningHour())
+                .closingHour(restaurant.getClosingHour())
+                .phone(restaurant.getPhone())
+                .rating(BigDecimal.ZERO)
+                .build();
+    }
+
+    private String getAddressText(Address address) {
+        log.info("parse address to text");
+        StringJoiner sj = new StringJoiner(", ");
+        return sj.add(address.getWard())
+                .add(address.getDistrict())
+                .add(address.getProvince())
+                .toString();
     }
 }

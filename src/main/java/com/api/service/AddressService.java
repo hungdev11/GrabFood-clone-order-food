@@ -5,5 +5,5 @@ import com.api.entity.Address;
 
 public interface AddressService {
     long addNewAddress(AddressRequest addressRequest);
-    public Address getAddressById(long id);
+    Address getAddressById(long id);
 }

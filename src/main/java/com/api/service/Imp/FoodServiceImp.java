@@ -32,12 +32,13 @@ public class FoodServiceImp implements FoodService {
     @Override
     @Transactional
     public long addFood(AddFoodRequest request) {
+        log.info("Adding new food");
         Restaurant restaurant = restaurantService.getRestaurant(request.getRestaurant_id());
         FoodType foodType = foodTypeService.getFoodTypeByName(request.getType());
 
         if (foodRepository.existsByRestaurantAndNameAndTypeAndKind(
                 restaurant, request.getName(), foodType, request.getKind())) {
-            log.info("Food already exists");
+            log.error("Food already exists");
             throw new AppException(ErrorCode.FOOD_OF_RETAURANT_EXISTED);
         }
 
@@ -70,31 +71,31 @@ public class FoodServiceImp implements FoodService {
     @Override
     @Transactional
     public long adjustFoodPrice(AdjustFoodPriceRequest request) {
+        log.info("adjust Food Price");
         if (request.getOldPrice().equals(request.getNewPrice())) {
-            log.info("Prices are the same");
+            log.error("Prices are the same");
             throw new AppException(ErrorCode.FOOD_PRICE_REDUNDANT);
         }
 
         Restaurant restaurant = restaurantService.getRestaurant(request.getRestaurant_id());
 
         Food food = foodRepository.findById(request.getFood_id()).orElseThrow(() -> {
-            log.info("Food not found");
+            log.error("Food not found");
             return new AppException(ErrorCode.FOOD_NOT_FOUND);
         });
 
         if (!food.getRestaurant().equals(restaurant)) {
-            log.info("Food id {} not belong to restaurant {}", request.getFood_id(), request.getRestaurant_id());
+            log.error("Food id {} not belong to restaurant {}", request.getFood_id(), request.getRestaurant_id());
             throw new AppException(ErrorCode.FOOD_RESTAURANT_NOT_FOUND);
         }
 
         FoodDetail newestDetail = food.getFoodDetails().stream()
-                .sorted(Comparator.comparing(FoodDetail::getStartTime).reversed())
-                .findFirst()
+                .max(Comparator.comparing(FoodDetail::getStartTime))
                 .orElse(null);
 
         if (newestDetail != null) {
             if (newestDetail.getPrice().compareTo(request.getOldPrice()) != 0) {
-                log.info("Previous price conflict {} vs {}", newestDetail.getPrice(), request.getOldPrice());
+                log.error("Previous price conflict {} vs {}", newestDetail.getPrice(), request.getOldPrice());
                 throw new AppException(ErrorCode.FOOD_DETAIL_CONFLICT_PRICE);
             }
             newestDetail.setEndTime(LocalDateTime.now());

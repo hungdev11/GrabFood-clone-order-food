@@ -19,8 +19,9 @@ public class FoodTypeServiceImp implements FoodTypeService {
     @Override
     @Transactional
     public long addNewFoodType(String name) {
+        log.info("add new FoodType");
         if (foodTypeRepository.existsByName(name)) {
-            log.info("FoodType with name " + name + " already exists");
+            log.error("FoodType with name {} already exists", name);
             throw new AppException(ErrorCode.FOODTYPE_NAME_EXISTED);
         }
         return foodTypeRepository.save(FoodType.builder()
@@ -30,8 +31,9 @@ public class FoodTypeServiceImp implements FoodTypeService {
 
     @Override
     public FoodType getFoodTypeByName(String name) {
+        log.info("Get FoodType by name {}", name);
         return foodTypeRepository.findByName(name).orElseThrow( () -> {
-            log.info("FoodType with name " + name + " does not exist");
+            log.error("FoodType with name {} does not exist", name);
             return new AppException(ErrorCode.FOODTYPE_NAME_NOT_EXISTED);
         });
     }

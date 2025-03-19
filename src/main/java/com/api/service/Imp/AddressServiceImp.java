@@ -6,10 +6,13 @@ import com.api.exception.ErrorCode;
 import com.api.entity.Address;
 import com.api.repository.AddressRepository;
 import com.api.service.AddressService;
+import com.api.service.RestaurantService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.StringJoiner;
 
 @Service
 @RequiredArgsConstructor
@@ -32,10 +35,12 @@ public class AddressServiceImp implements AddressService {
 
     @Override
     public Address getAddressById(long id) {
+        log.info("Get address by id: {}", id);
         return addressRepository.findById(id)
                 .orElseThrow(() -> {
-                    log.error("Address doesn't existed: " + id);
+                    log.error("Address id {} doesn't existed: ", id);
                     return new AppException(ErrorCode.RESOURCE_NOT_FOUND);
                 });
     }
+
 }
