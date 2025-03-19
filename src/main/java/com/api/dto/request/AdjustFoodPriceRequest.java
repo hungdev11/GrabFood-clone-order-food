@@ -8,10 +8,9 @@ import java.math.BigDecimal;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class AdjustFoodPriceRequest {
-    private long restaurant_id;
-    private long food_id;
+    private long restaurantId;
+    private long foodId;
     private BigDecimal oldPrice;
     private BigDecimal newPrice;
 }

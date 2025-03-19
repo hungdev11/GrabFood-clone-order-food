@@ -44,12 +44,7 @@ public class RestaurantServiceImp implements RestaurantService {
                 .build();
 
         long accountId = accountService.addNewAccount(request.getUsername(), request.getPassword());
-
-        long addressId = addressService.addNewAddress(AddressRequest.builder()
-                        .ward(request.getAddress().getWard())
-                        .district(request.getAddress().getDistrict())
-                        .province(request.getAddress().getProvince())
-                .build());
+        long addressId = addressService.addNewAddress(request.getAddress());
 
         log.info("Add Restaurant address and account");
         newRestaurant.setAccount(accountService.getAccountById(accountId));

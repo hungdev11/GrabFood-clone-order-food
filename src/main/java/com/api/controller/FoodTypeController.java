@@ -1,7 +1,5 @@
 package com.api.controller;
 
-import com.api.dto.request.AddFoodTypeRequest;
-import com.api.dto.request.AddRestaurantRequest;
 import com.api.dto.response.ApiResponse;
 import com.api.service.FoodTypeService;
 import lombok.RequiredArgsConstructor;

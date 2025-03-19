@@ -2,6 +2,7 @@ package com.api.service.Imp;
 
 import com.api.dto.request.AddFoodRequest;
 import com.api.dto.request.AdjustFoodPriceRequest;
+import com.api.dto.response.GetFoodResponse;
 import com.api.exception.AppException;
 import com.api.exception.ErrorCode;
 import com.api.entity.Food;
@@ -18,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 
@@ -77,21 +79,21 @@ public class FoodServiceImp implements FoodService {
             throw new AppException(ErrorCode.FOOD_PRICE_REDUNDANT);
         }
 
-        Restaurant restaurant = restaurantService.getRestaurant(request.getRestaurant_id());
+        Restaurant restaurant = restaurantService.getRestaurant(request.getRestaurantId());
 
-        Food food = foodRepository.findById(request.getFood_id()).orElseThrow(() -> {
-            log.error("Food not found");
-            return new AppException(ErrorCode.FOOD_NOT_FOUND);
-        });
+        Food food = getFoodById(request.getFoodId());
 
         if (!food.getRestaurant().equals(restaurant)) {
-            log.error("Food id {} not belong to restaurant {}", request.getFood_id(), request.getRestaurant_id());
+            log.error("Food id {} not belong to restaurant {}", request.getFoodId(), request.getRestaurantId());
             throw new AppException(ErrorCode.FOOD_RESTAURANT_NOT_FOUND);
         }
 
         FoodDetail newestDetail = food.getFoodDetails().stream()
                 .max(Comparator.comparing(FoodDetail::getStartTime))
-                .orElse(null);
+                .orElseThrow(() -> {
+                    log.error("Food id {} not found any detail", request.getFoodId());
+                    return new AppException(ErrorCode.FOOD_NOT_FOUND);
+                });
 
         if (newestDetail != null) {
             if (newestDetail.getPrice().compareTo(request.getOldPrice()) != 0) {
@@ -113,5 +115,59 @@ public class FoodServiceImp implements FoodService {
         return foodRepository.save(food).getId();
     }
 
+    @Override
+    public BigDecimal getCurrentPrice(long foodId) {
+        log.info("Current price of {}", foodId);
+        Food food = getFoodById(foodId);
+        BigDecimal price = BigDecimal.ZERO;
+        for (FoodDetail foodDetail : food.getFoodDetails()) {
+            if (foodDetail.getEndTime() == null) {
+                price = foodDetail.getPrice();
+                break;
+            }
+        }
+        return price;
+    }
+
+    @Override
+    public BigDecimal getFoodPriceIn(long foodId, LocalDateTime time) {
+        log.info("Get food price of {} in {}", foodId, time);
+        Food food = getFoodById(foodId);
+        BigDecimal price = BigDecimal.ZERO;
+        for (FoodDetail foodDetail : food.getFoodDetails()) {
+            if (time.isAfter(foodDetail.getEndTime()) && time.isBefore(foodDetail.getStartTime())) {
+                price = foodDetail.getPrice();
+                break;
+            }
+        }
+        return price;
+    }
+
+    @Override
+    public GetFoodResponse getFood(long foodId, boolean isForCustomer) {
+        log.info("Get food info {}", foodId);
+        Food food = getFoodById(foodId);
+
+        if (isForCustomer && food.getStatus() == FoodStatus.INACTIVE) {
+            log.error("Food id {} not public", foodId);
+            throw new AppException(ErrorCode.FOOD_NOT_PUBLIC_FOR_CUSTOMER);
+        }
+
+        return GetFoodResponse.builder()
+                .name(food.getName())
+                .image(food.getImage())
+                .description(food.getDescription())
+                .price(getCurrentPrice(food.getId()))
+                .rating(BigDecimal.ZERO)
+                .build();
+    }
+
+
+    private Food getFoodById(long id) {
+        return foodRepository.findById(id).orElseThrow(() -> {
+            log.error("Food not found");
+            return new AppException(ErrorCode.FOOD_NOT_FOUND);
+        });
+    }
 
 }

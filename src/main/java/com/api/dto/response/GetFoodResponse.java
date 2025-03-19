@@ -1,20 +1,21 @@
-package com.api.dto.request;
+package com.api.dto.response;
 
-import com.api.utils.FoodKind;
+import com.api.utils.FoodStatus;
 import lombok.*;
 
 import java.math.BigDecimal;
+
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AddFoodRequest {
+@Builder
+public class GetFoodResponse {
     private String name;
     private String image;
     private String description;
-    private FoodKind kind;
-    private String type;
+    private FoodStatus status;
     private BigDecimal price;
-    private long restaurant_id;
+    private BigDecimal rating;
 }
