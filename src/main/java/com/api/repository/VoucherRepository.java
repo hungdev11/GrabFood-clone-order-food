@@ -1,6 +1,6 @@
 package com.api.repository;
 
-import com.api.model.Voucher;
+import com.api.entity.Voucher;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

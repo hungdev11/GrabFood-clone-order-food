@@ -1,9 +1,8 @@
-package com.api.model;
+package com.api.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data

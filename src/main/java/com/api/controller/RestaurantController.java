@@ -2,13 +2,12 @@ package com.api.controller;
 
 import com.api.dto.request.AddRestaurantRequest;
 import com.api.dto.response.ApiResponse;
+import com.api.dto.response.RestaurantResponse;
+import com.api.entity.Restaurant;
 import com.api.service.RestaurantService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Slf4j
@@ -23,6 +22,15 @@ public class RestaurantController {
                 .code(200)
                 .message("Success")
                 .data(restaurantService.addRestaurant(newRestaurant))
+                .build();
+    }
+
+    @GetMapping("/{restaurant_id}")
+    public ApiResponse<RestaurantResponse> getRestaurantById(@PathVariable long restaurant_id) {
+        return ApiResponse.<RestaurantResponse>builder()
+                .code(200)
+                .message("Success")
+                .data(restaurantService.getRestaurantResponse(restaurant_id))
                 .build();
     }
 }

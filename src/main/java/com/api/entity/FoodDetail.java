@@ -1,8 +1,7 @@
-package com.api.model;
+package com.api.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.Check;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

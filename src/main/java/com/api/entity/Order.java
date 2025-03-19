@@ -1,4 +1,4 @@
-package com.api.model;
+package com.api.entity;
 
 import com.api.utils.OrderStatus;
 import jakarta.persistence.*;
@@ -17,10 +17,6 @@ public class Order extends BaseEntity{
     @ManyToOne
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
-
-    @ManyToOne
-    @JoinColumn(name = "restaurant_id", nullable = false)
-    private Restaurant restaurant;
 
     @Column(nullable = false, precision = 11, scale = 2)
     private BigDecimal totalPrice;

@@ -1,4 +1,4 @@
-package com.api.model;
+package com.api.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -11,6 +11,7 @@ import java.util.List;
 @Entity
 @Table(name = "voucher_detail")
 public class VoucherDetail extends BaseEntity{
+
     @Column(nullable = false)
     private LocalDateTime startDate;
 
