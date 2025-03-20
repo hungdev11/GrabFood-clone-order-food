@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Builder
 public class VoucherRequest {
+    @NonNull
     private String description;
 
     private int quantity;
@@ -19,6 +20,8 @@ public class VoucherRequest {
     private BigDecimal minRequire;
 
     private VoucherType type;
+
+    private BigDecimal value;
 
     private VoucherStatus status;
 

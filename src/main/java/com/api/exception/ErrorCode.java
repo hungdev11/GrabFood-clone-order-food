@@ -24,7 +24,7 @@ public enum ErrorCode {
     //RESTAURANT
     RESTAURANT_NOT_FOUND(0100, "Restaurant not found", HttpStatus.BAD_REQUEST),
     VOUCHER_NOT_FOUND(0100, "Voucher not found", HttpStatus.BAD_REQUEST),
-
+    VOUCHER_VALUE_CONFLICT(0200, "Voucher value is conflict", HttpStatus.BAD_REQUEST),
     ;
     private final int code;
     private final String message;
