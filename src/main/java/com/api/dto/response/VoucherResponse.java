@@ -13,6 +13,9 @@ import java.math.BigDecimal;
 @Builder
 public class VoucherResponse {
     private long id;
+
+    private String code;
+
     private String description;
 
     private int quantity;
