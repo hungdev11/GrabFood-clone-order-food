@@ -12,14 +12,10 @@ import java.util.List;
 
 public interface FoodService {
     long addFood(AddFoodRequest food);
-
     long adjustFoodPrice(AdjustFoodPriceRequest adjustFoodPriceRequest);
-
     BigDecimal getCurrentPrice(long foodId);
-
     BigDecimal getFoodPriceIn(long foodId, LocalDateTime time);
-
     GetFoodResponse getFood(long foodId, boolean isForCustomer);
-
     PageResponse<List<GetFoodResponse>> getFoodsOfRestaurant(long restaurantId, boolean isForCustomer, int page, int pageSize);
+    void changeFoodStatus(long restaurantId, long foodId, FoodStatus foodStatus);
 }

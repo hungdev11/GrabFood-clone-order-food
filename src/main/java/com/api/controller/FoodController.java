@@ -5,6 +5,7 @@ import com.api.dto.request.AdjustFoodPriceRequest;
 import com.api.dto.response.ApiResponse;
 import com.api.dto.response.GetFoodResponse;
 import com.api.service.FoodService;
+import com.api.utils.FoodStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -56,6 +57,15 @@ public class FoodController {
                 .data(foodService.getFoodsOfRestaurant(restaurantId, isForCustomer, page, pageSize))
                 .message("Success")
                 .code(200)
+                .build();
+    }
+
+    @PutMapping("/{foodId}")
+    public ApiResponse<?> updateFoodStatus(@PathVariable long foodId, @RequestParam long restaurantId, @RequestParam FoodStatus foodStatus) {
+        foodService.changeFoodStatus(restaurantId, foodId, foodStatus);
+        return ApiResponse.builder()
+                .code(200)
+                .message("Success")
                 .build();
     }
 

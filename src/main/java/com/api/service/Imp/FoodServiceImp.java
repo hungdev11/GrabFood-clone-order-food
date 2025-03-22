@@ -202,6 +202,19 @@ public class FoodServiceImp implements FoodService {
                 .build();
     }
 
+    @Override
+    public void changeFoodStatus(long restaurantId, long foodId, FoodStatus foodStatus) {
+        log.info("Change food status of {} in {} to {}", foodId, restaurantId, foodStatus);
+        Restaurant restaurant = restaurantService.getRestaurant(restaurantId);
+        Food food = getFoodById(foodId);
+        if (!food.getRestaurant().equals(restaurant)) {
+            log.error("Food {} not belong to retaurant {}", foodId, restaurantId);
+            throw new AppException(ErrorCode.FOOD_RESTAURANT_NOT_FOUND);
+        }
+        food.setStatus(foodStatus);
+        foodRepository.save(food);
+    }
+
     private Food getFoodById(long id) {
         log.info("Get food id {}", id);
         return foodRepository.findById(id).orElseThrow(() -> {
