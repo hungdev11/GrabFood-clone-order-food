@@ -1,6 +1,7 @@
 package com.api.dto.response;
 
 import com.api.utils.FoodStatus;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -11,6 +12,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class GetFoodResponse {
     private String name;
     private String image;

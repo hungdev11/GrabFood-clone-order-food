@@ -3,6 +3,7 @@ package com.api.service.Imp;
 import com.api.dto.request.AddFoodRequest;
 import com.api.dto.request.AdjustFoodPriceRequest;
 import com.api.dto.response.GetFoodResponse;
+import com.api.dto.response.PageResponse;
 import com.api.exception.AppException;
 import com.api.exception.ErrorCode;
 import com.api.entity.Food;
@@ -17,11 +18,16 @@ import com.api.utils.FoodStatus;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -162,6 +168,39 @@ public class FoodServiceImp implements FoodService {
                 .build();
     }
 
+    @Override
+    public PageResponse<List<GetFoodResponse>> getFoodsOfRestaurant(long restaurantId, boolean isForCustomer, int page, int pageSize) {
+        log.info("Get foods of restaurant {}", restaurantId);
+        log.info("{} foods in page {}", pageSize, page);
+
+        Restaurant restaurant = restaurantService.getRestaurant(restaurantId);
+
+        Pageable pageable = PageRequest.of(page, pageSize);
+
+        Page<Food> foodPage;
+        if (isForCustomer) {
+            foodPage = foodRepository.findByRestaurantAndStatus(restaurant, FoodStatus.ACTIVE, pageable);
+        } else {
+            foodPage = foodRepository.findByRestaurant(restaurant, pageable);
+        }
+
+        List<GetFoodResponse> foodResponses = foodPage.getContent().stream()
+                .map(food -> GetFoodResponse.builder()
+                        .name(food.getName())
+                        .image(food.getImage())
+                        .description(food.getDescription())
+                        .price(getCurrentPrice(food.getId()))
+                        .rating(BigDecimal.ZERO)
+                        .build())
+                .collect(Collectors.toList());
+
+        return PageResponse.<List<GetFoodResponse>>builder()
+                .page(page)
+                .size(pageSize)
+                .total(foodPage.getTotalElements())
+                .items(foodResponses)
+                .build();
+    }
 
     private Food getFoodById(long id) {
         return foodRepository.findById(id).orElseThrow(() -> {

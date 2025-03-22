@@ -3,10 +3,12 @@ package com.api.service;
 import com.api.dto.request.AddFoodRequest;
 import com.api.dto.request.AdjustFoodPriceRequest;
 import com.api.dto.response.GetFoodResponse;
+import com.api.dto.response.PageResponse;
 import com.api.utils.FoodStatus;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public interface FoodService {
     long addFood(AddFoodRequest food);
@@ -17,5 +19,7 @@ public interface FoodService {
 
     BigDecimal getFoodPriceIn(long foodId, LocalDateTime time);
 
-    public GetFoodResponse getFood(long foodId, boolean isForCustomer);
+    GetFoodResponse getFood(long foodId, boolean isForCustomer);
+
+    PageResponse<List<GetFoodResponse>> getFoodsOfRestaurant(long restaurantId, boolean isForCustomer, int page, int pageSize);
 }
