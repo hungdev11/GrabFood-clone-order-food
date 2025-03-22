@@ -1,5 +1,8 @@
-package com.api.model;
+package com.api.entity;
 
+import com.api.entity.BaseEntity;
+import com.api.entity.Restaurant;
+import com.api.entity.VoucherDetail;
 import com.api.utils.VoucherStatus;
 import com.api.utils.VoucherType;
 import jakarta.persistence.*;

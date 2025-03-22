@@ -1,12 +1,14 @@
 package com.api.service.Imp;
 
 import com.api.dto.request.VoucherRequest;
+import com.api.entity.Restaurant;
+import com.api.entity.Voucher;
 import com.api.exception.AppException;
 import com.api.exception.ErrorCode;
 import com.api.mapper.Imp.VoucherMapperImp;
 import com.api.mapper.VoucherMapper;
-import com.api.model.Restaurant;
-import com.api.model.Voucher;
+
+
 import com.api.repository.VoucherRepository;
 import com.api.service.RestaurantService;
 import com.api.service.VoucherService;
