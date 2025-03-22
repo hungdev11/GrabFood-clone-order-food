@@ -203,6 +203,7 @@ public class FoodServiceImp implements FoodService {
     }
 
     private Food getFoodById(long id) {
+        log.info("Get food id {}", id);
         return foodRepository.findById(id).orElseThrow(() -> {
             log.error("Food not found");
             return new AppException(ErrorCode.FOOD_NOT_FOUND);
