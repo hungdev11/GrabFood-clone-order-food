@@ -12,6 +12,9 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Builder
 public class VoucherRequest {
+
+    private String code;
+
     @NonNull
     private String description;
 

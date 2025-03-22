@@ -1,8 +1,6 @@
 package com.api.entity;
 
 import com.api.entity.BaseEntity;
-import com.api.entity.Restaurant;
-import com.api.entity.VoucherDetail;
 import com.api.utils.VoucherStatus;
 import com.api.utils.VoucherType;
 import jakarta.persistence.*;
@@ -21,6 +19,8 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class Voucher extends BaseEntity {
+    private String code;
+
     private String description;
 
     @Column(nullable = false)
@@ -32,12 +32,14 @@ public class Voucher extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private VoucherType type;
 
+    private BigDecimal value;
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private VoucherStatus status;
 
     @ManyToOne
-    @JoinColumn(name = "restaurant_id", nullable = false)
+    @JoinColumn(name = "restaurant_id", nullable = true)
     private Restaurant restaurant;
 
     @OneToMany(mappedBy = "voucher", cascade = CascadeType.ALL, orphanRemoval = true)
