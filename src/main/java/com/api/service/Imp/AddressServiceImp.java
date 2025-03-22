@@ -6,13 +6,10 @@ import com.api.exception.ErrorCode;
 import com.api.entity.Address;
 import com.api.repository.AddressRepository;
 import com.api.service.AddressService;
-import com.api.service.RestaurantService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.util.StringJoiner;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +26,7 @@ public class AddressServiceImp implements AddressService {
                         .district(addressRequest.getDistrict())
                         .province(addressRequest.getProvince())
                         .detail("")
-                        .customer(null)
+                        .user(null)
                 .build()).getId();
     }
 

@@ -15,8 +15,8 @@ import lombok.*;
 @Table(name = "address")
 public class Address extends BaseEntity{
     @ManyToOne
-    @JoinColumn(name = "customer_id")
-    private Customer customer;
+    @JoinColumn(name = "user_id")
+    private User user;
 
     private String province;
     private String district;
