@@ -3,7 +3,6 @@ package com.api.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +12,7 @@ import java.util.List;
         @UniqueConstraint(columnNames = "email"),
         @UniqueConstraint(columnNames = "phone")
 })
-public class Customer extends BaseEntity{
+public class User extends BaseEntity{
     @Column(nullable = false)
     private String name;
 
@@ -23,19 +22,14 @@ public class Customer extends BaseEntity{
     @Column(nullable = false)
     private String phone;
 
-    @Column(nullable = false)
-    private LocalDate createDate;
 
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<Address> addresses = new ArrayList<>();
 
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<Order> orders = new ArrayList<>();
 
-    @PrePersist
-    private void onCreate() {
-        if (this.createDate == null) {
-            this.createDate = LocalDate.now();
-        }
-    }
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "account_id", referencedColumnName = "id")
+    private Account account;
 }

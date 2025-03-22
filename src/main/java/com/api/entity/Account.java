@@ -1,9 +1,6 @@
 package com.api.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
@@ -20,4 +17,7 @@ public class Account extends BaseEntity {
 
     @Column(columnDefinition = "VARCHAR(255)", nullable = false)
     private String password;
+
+    @OneToOne(mappedBy = "account")
+    private User user;
 }
