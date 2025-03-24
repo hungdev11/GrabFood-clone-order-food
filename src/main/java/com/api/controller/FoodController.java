@@ -39,7 +39,7 @@ public class FoodController {
     }
 
     @GetMapping("/{foodId}")
-    public ApiResponse<GetFoodResponse> getFood(@PathVariable long foodId, @RequestParam boolean isForCustomer) {
+    public ApiResponse<GetFoodResponse> getFood(@PathVariable long foodId, @RequestParam(defaultValue = "false") boolean isForCustomer) {
         return ApiResponse.<GetFoodResponse>builder()
                 .code(200)
                 .message("Success")
@@ -50,7 +50,7 @@ public class FoodController {
     @GetMapping("/restaurant/{restaurantId}")
     public ApiResponse<?> getFoodsOfRestaurant(
             @PathVariable long restaurantId,
-            @RequestParam boolean isForCustomer,
+            @RequestParam(defaultValue = "false") boolean isForCustomer,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int pageSize) {
         return ApiResponse.builder()
@@ -66,6 +66,33 @@ public class FoodController {
         return ApiResponse.builder()
                 .code(200)
                 .message("Success")
+                .build();
+    }
+
+    @GetMapping("/additional")
+    public ApiResponse<?> getAdditionalFoodsOfRestaurant(
+            @RequestParam long restaurantId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "0") int pageSize,
+            @RequestParam(defaultValue = "false") boolean isForCustomer
+    ) {
+        return ApiResponse.builder()
+                .data(foodService.getAdditionalFoodsOfRestaurant(restaurantId, isForCustomer, page, pageSize))
+                .message("Success")
+                .code(200)
+                .build();
+    }
+
+    @GetMapping("/additional/{foodId}")
+    public ApiResponse<?> getAdditionalFoodsOfFood(
+            @RequestParam long restaurantId,
+            @PathVariable long foodId,
+            @RequestParam boolean isForCustomer
+    ) {
+        return ApiResponse.builder()
+                .data(foodService.getAdditionalFoodsOfFood(restaurantId, foodId, isForCustomer))
+                .message("Success")
+                .code(200)
                 .build();
     }
 

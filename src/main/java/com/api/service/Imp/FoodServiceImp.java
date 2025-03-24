@@ -14,7 +14,9 @@ import com.api.repository.FoodRepository;
 import com.api.service.FoodService;
 import com.api.service.FoodTypeService;
 import com.api.service.RestaurantService;
+import com.api.utils.FoodKind;
 import com.api.utils.FoodStatus;
+import com.api.utils.PageUtils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +30,7 @@ import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -85,14 +88,7 @@ public class FoodServiceImp implements FoodService {
             throw new AppException(ErrorCode.FOOD_PRICE_REDUNDANT);
         }
 
-        Restaurant restaurant = restaurantService.getRestaurant(request.getRestaurantId());
-
-        Food food = getFoodById(request.getFoodId());
-
-        if (!food.getRestaurant().equals(restaurant)) {
-            log.error("Food id {} not belong to restaurant {}", request.getFoodId(), request.getRestaurantId());
-            throw new AppException(ErrorCode.FOOD_RESTAURANT_NOT_FOUND);
-        }
+        Food food = getFoodByIdAndRestaurantId(request.getFoodId(), request.getRestaurantId());
 
         FoodDetail newestDetail = food.getFoodDetails().stream()
                 .max(Comparator.comparing(FoodDetail::getStartTime))
@@ -171,6 +167,11 @@ public class FoodServiceImp implements FoodService {
     @Override
     public PageResponse<List<GetFoodResponse>> getFoodsOfRestaurant(long restaurantId, boolean isForCustomer, int page, int pageSize) {
         log.info("Get foods of restaurant {}", restaurantId);
+
+        if (page < 0) {
+            log.warn("Invalid page number: {}. Defaulting to 0.", page);
+            page = 0;
+        }
         log.info("{} foods in page {}", pageSize, page);
 
         Restaurant restaurant = restaurantService.getRestaurant(restaurantId);
@@ -184,15 +185,7 @@ public class FoodServiceImp implements FoodService {
             foodPage = foodRepository.findByRestaurant(restaurant, pageable);
         }
 
-        List<GetFoodResponse> foodResponses = foodPage.getContent().stream()
-                .map(food -> GetFoodResponse.builder()
-                        .name(food.getName())
-                        .image(food.getImage())
-                        .description(food.getDescription())
-                        .price(getCurrentPrice(food.getId()))
-                        .rating(BigDecimal.ZERO)
-                        .build())
-                .collect(Collectors.toList());
+        List<GetFoodResponse> foodResponses = foodResponsesToEndUser(foodPage, isForCustomer);
 
         return PageResponse.<List<GetFoodResponse>>builder()
                 .page(page)
@@ -205,15 +198,59 @@ public class FoodServiceImp implements FoodService {
     @Override
     public void changeFoodStatus(long restaurantId, long foodId, FoodStatus foodStatus) {
         log.info("Change food status of {} in {} to {}", foodId, restaurantId, foodStatus);
-        Restaurant restaurant = restaurantService.getRestaurant(restaurantId);
-        Food food = getFoodById(foodId);
-        if (!food.getRestaurant().equals(restaurant)) {
-            log.error("Food {} not belong to retaurant {}", foodId, restaurantId);
-            throw new AppException(ErrorCode.FOOD_RESTAURANT_NOT_FOUND);
-        }
+        Food food = getFoodByIdAndRestaurantId(foodId, restaurantId);
         food.setStatus(foodStatus);
         foodRepository.save(food);
     }
+
+    @Override
+    public PageResponse<List<GetFoodResponse>> getAdditionalFoodsOfRestaurant(
+            long restaurantId, boolean isForCustomer, int page, int pageSize) {
+        log.info("Get additional foods of restaurant {}, for customer {} ", restaurantId, isForCustomer);
+
+        if (page < 0) {
+            log.warn("Invalid page number: {}. Defaulting to 0.", page);
+            page = 0;
+        }
+
+        Restaurant restaurant = restaurantService.getRestaurant(restaurantId);
+        Pageable pageable = PageRequest.of(page, pageSize);
+
+        Stream<Food> foodStream = restaurant.getFoods().stream()
+                .filter(f -> !f.getKind().equals(FoodKind.MAIN));
+
+        if (isForCustomer) {
+            foodStream = foodStream.filter(f -> f.getStatus() == FoodStatus.ACTIVE);
+        }
+
+        Page<Food> foodPage = PageUtils.convertListToPage(foodStream.toList(), pageable);
+
+        List<GetFoodResponse> foodResponses = foodResponsesToEndUser(foodPage, isForCustomer);
+
+        return PageResponse.<List<GetFoodResponse>>builder()
+                .page(page)
+                .size(pageSize)
+                .total(foodPage.getTotalElements())
+                .items(foodResponses)
+                .build();
+    }
+
+    @Override
+    public PageResponse<List<GetFoodResponse>> getAdditionalFoodsOfFood(long restaurantId, long foodId, boolean isForCustomer) {
+        log.info("Get food {} of restaurant {}, for customer {}", foodId, restaurantId, isForCustomer);
+        Food food = getFoodByIdAndRestaurantId(foodId, restaurantId);
+
+        if (isForCustomer && food.getStatus() == FoodStatus.INACTIVE) {
+            log.error("Food id {} not public", foodId);
+            throw new AppException(ErrorCode.FOOD_NOT_PUBLIC_FOR_CUSTOMER);
+        }
+
+        // DO LATER
+
+        return null;
+    }
+
+//====================================================================================================================================
 
     private Food getFoodById(long id) {
         log.info("Get food id {}", id);
@@ -221,6 +258,40 @@ public class FoodServiceImp implements FoodService {
             log.error("Food not found");
             return new AppException(ErrorCode.FOOD_NOT_FOUND);
         });
+    }
+
+    private Food getFoodByIdAndRestaurantId (long foodId, long restaurantId) {
+        log.info("Get food id {} and restaurant id {}", foodId, restaurantId);
+        Restaurant restaurant = restaurantService.getRestaurant(restaurantId);
+
+        Food food = getFoodById(foodId);
+
+        if (!food.getRestaurant().equals(restaurant)) {
+            log.error("Food id {} not belong to restaurant {}", foodId, restaurantId);
+            throw new AppException(ErrorCode.FOOD_RESTAURANT_NOT_FOUND);
+        }
+        return food;
+    }
+
+    private List<GetFoodResponse> foodResponsesToEndUser(Page<Food> foodPage, boolean isForCustomer) {
+        log.info("Response to user? {}", isForCustomer);
+
+        return foodPage.getContent().stream()
+                .map(food -> {
+                    GetFoodResponse.GetFoodResponseBuilder responseBuilder = GetFoodResponse.builder()
+                            .name(food.getName())
+                            .image(food.getImage())
+                            .description(food.getDescription())
+                            .price(getCurrentPrice(food.getId()))
+                            .rating(BigDecimal.ZERO);
+
+                    if (!isForCustomer) {
+                        responseBuilder.status(food.getStatus());
+                    }
+
+                    return responseBuilder.build();
+                })
+                .collect(Collectors.toList());
     }
 
 }

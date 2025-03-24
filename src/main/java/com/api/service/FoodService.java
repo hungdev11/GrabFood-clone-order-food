@@ -18,4 +18,6 @@ public interface FoodService {
     GetFoodResponse getFood(long foodId, boolean isForCustomer);
     PageResponse<List<GetFoodResponse>> getFoodsOfRestaurant(long restaurantId, boolean isForCustomer, int page, int pageSize);
     void changeFoodStatus(long restaurantId, long foodId, FoodStatus foodStatus);
+    PageResponse<List<GetFoodResponse>> getAdditionalFoodsOfRestaurant(long restaurantId, boolean isForCustomer, int page, int pageSize);
+    PageResponse<List<GetFoodResponse>> getAdditionalFoodsOfFood (long restaurantId, long foodId, boolean isForCustomer);
 }
