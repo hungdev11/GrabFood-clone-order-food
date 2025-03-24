@@ -15,9 +15,9 @@ public class CartController {
     @Autowired
     private CartService cartService;
     @PostMapping("/add")
-    public ResponseEntity<CartDetail> addToCart(@RequestParam Long userId, @RequestBody AddToCartRequest request) {
-        CartDetail cartDetail = cartService.addToCart(userId, request);
-        return ResponseEntity.ok(cartDetail);
+    public ResponseEntity<Void> addToCart(@RequestParam Long userId, @RequestBody AddToCartRequest request) {
+        cartService.addToCart(userId, request);
+        return ResponseEntity.ok().build();
     }
     @DeleteMapping("/{cartId}/remove/{foodId}")
     public ResponseEntity<Void> removeFromCart(@PathVariable Long cartId, @PathVariable Long foodId) {

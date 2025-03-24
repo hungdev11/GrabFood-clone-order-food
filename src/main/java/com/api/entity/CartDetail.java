@@ -1,13 +1,15 @@
 package com.api.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 
-@Data
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
+@Builder
 @Table(
         name = "cart_detail",
         uniqueConstraints = {

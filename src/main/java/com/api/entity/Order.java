@@ -2,19 +2,19 @@ package com.api.entity;
 
 import com.api.utils.OrderStatus;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
-@Entity
-@Getter
 @Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@Builder
 @Table(name = "orders") // order conflict with ORDER in mysql
 public class Order extends BaseEntity{
 
