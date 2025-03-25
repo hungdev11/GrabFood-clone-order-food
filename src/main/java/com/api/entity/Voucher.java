@@ -19,6 +19,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class Voucher extends BaseEntity {
+    @Column(unique = true, nullable = false)
     private String code;
 
     private String description;

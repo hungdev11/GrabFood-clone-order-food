@@ -10,4 +10,5 @@ public interface VoucherService {
     VoucherResponse addVoucher(VoucherRequest request);
 
     Voucher getVoucherbyId(long id);
+
 }
