@@ -8,6 +8,7 @@ import com.api.exception.AppException;
 import com.api.exception.ErrorCode;
 import com.api.mapper.Imp.VoucherMapperImp;
 
+import com.api.repository.VoucherDetailRepository;
 import com.api.repository.VoucherRepository;
 import com.api.service.RestaurantService;
 import com.api.service.VoucherService;
@@ -24,6 +25,7 @@ import java.math.BigDecimal;
 public class VoucherServiceImp implements VoucherService {
     private final VoucherRepository voucherRepository;
     private final RestaurantService restaurantService;
+    private final VoucherDetailRepository voucherDetailRepository;
 
     @Override
     public VoucherResponse addVoucher(VoucherRequest request) {
@@ -54,6 +56,53 @@ public class VoucherServiceImp implements VoucherService {
             log.info("Voucher not found");
             return new AppException(ErrorCode.VOUCHER_NOT_FOUND);
         });
+    }
+
+    @Override
+    public void deleteVoucher(long voucher_id) {
+        boolean check = voucherDetailRepository.existsByVoucherId(voucher_id);
+        if(check) {
+            throw new AppException(ErrorCode.VOUCHER_ID_EXISTED);
+        } else {
+            voucherRepository.deleteById(voucher_id);
+        }
+        // voucherRepository.deleteById(voucher_id);
+    }
+
+    @Override
+    public VoucherResponse updateVoucher(long id, VoucherRequest request) {
+        Voucher voucher = voucherRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.VOUCHER_NOT_FOUND));
+        boolean check = voucherDetailRepository.existsByVoucherId(id);
+        if(check) {
+            throw new AppException(ErrorCode.VOUCHER_ID_EXISTED);
+        } else {
+            voucher.setCode(request.getCode());
+            voucher.setStatus(request.getStatus());
+            voucher.setType(request.getType());
+            voucher.setValue(request.getValue());
+            voucher.setDescription(request.getDescription());
+            voucher.setValue(request.getValue());
+            voucher.setQuantity(request.getQuantity());
+            voucher.setMinRequire(request.getMinRequire());
+
+            checkVoucherValue(request.getType(), request.getValue());
+
+            Restaurant restaurant = null;
+            if(request.getRestaurant_id() > 0) {
+                restaurant = restaurantService.getRestaurant(request.getRestaurant_id());
+                voucher.setRestaurant(restaurant);
+            } else {
+                voucher.setRestaurant(null);
+            }
+
+            Voucher savedVoucher = voucherRepository.save(voucher);
+            VoucherMapperImp voucherMapper = new VoucherMapperImp();
+            VoucherResponse response = voucherMapper.toVoucherResponse(savedVoucher);
+            if(restaurant != null) {
+                response.setRestaurant_name(restaurant.getName());
+            }
+            return response;
+        }
     }
 
     public void checkVoucherValue( VoucherType type,BigDecimal value) {

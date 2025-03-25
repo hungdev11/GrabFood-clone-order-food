@@ -7,10 +7,7 @@ import com.api.service.VoucherService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Slf4j
@@ -25,6 +22,21 @@ public class VoucherController {
                 .code(200)
                 .message("Success")
                 .data(voucherService.addVoucher(request))
+                .build();
+    }
+
+    @DeleteMapping("/{voucher_id}")
+    public ApiResponse deleteVoucher(@PathVariable Long voucher_id) {
+        voucherService.deleteVoucher(voucher_id);
+        return ApiResponse.builder().build();
+    }
+
+    @PutMapping("/{voucher_id}")
+    public ApiResponse<VoucherResponse> updateVoucher(@PathVariable Long voucher_id, @RequestBody VoucherRequest request) {
+        return ApiResponse.<VoucherResponse>builder()
+                .code(200)
+                .message("Success")
+                .data(voucherService.updateVoucher(voucher_id,request))
                 .build();
     }
 }
