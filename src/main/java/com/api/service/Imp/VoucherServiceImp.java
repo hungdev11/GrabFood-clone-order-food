@@ -66,7 +66,6 @@ public class VoucherServiceImp implements VoucherService {
         } else {
             voucherRepository.deleteById(voucher_id);
         }
-        // voucherRepository.deleteById(voucher_id);
     }
 
     @Override

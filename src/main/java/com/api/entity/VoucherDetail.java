@@ -28,7 +28,7 @@ public class VoucherDetail extends BaseEntity{
     private Voucher voucher;
 
     @ManyToOne
-    @JoinColumn(name = "food_id", nullable = false)
+    @JoinColumn(name = "food_id")
     private Food food;
 
     @OneToMany(mappedBy = "voucherDetail", cascade = CascadeType.ALL, orphanRemoval = true)
