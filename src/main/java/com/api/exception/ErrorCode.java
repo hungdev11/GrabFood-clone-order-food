@@ -20,7 +20,7 @@ public enum ErrorCode {
     FOOD_NOT_FOUND(0055, "Food not found", HttpStatus.BAD_REQUEST),
     FOOD_DETAIL_CONFLICT_PRICE(0056, "Food price conflict", HttpStatus.BAD_REQUEST),
     FOOD_NOT_PUBLIC_FOR_CUSTOMER(0055, "Food not found", HttpStatus.BAD_REQUEST),
-
+    FOOD_ADDITIONAL(0056, "Food is additional", HttpStatus.BAD_REQUEST),
     //RESTAURANT
     RESTAURANT_NOT_FOUND(0100, "Restaurant not found", HttpStatus.BAD_REQUEST),
     VOUCHER_NOT_FOUND(0100, "Voucher not found", HttpStatus.BAD_REQUEST),

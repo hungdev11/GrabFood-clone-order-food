@@ -1,5 +1,6 @@
 package com.api.controller;
 
+import com.api.dto.request.AddAdditionalFoodsRequest;
 import com.api.dto.request.AddFoodRequest;
 import com.api.dto.request.AdjustFoodPriceRequest;
 import com.api.dto.response.ApiResponse;
@@ -73,7 +74,7 @@ public class FoodController {
     public ApiResponse<?> getAdditionalFoodsOfRestaurant(
             @RequestParam long restaurantId,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "0") int pageSize,
+            @RequestParam(defaultValue = "5") int pageSize,
             @RequestParam(defaultValue = "false") boolean isForCustomer
     ) {
         return ApiResponse.builder()
@@ -87,10 +88,21 @@ public class FoodController {
     public ApiResponse<?> getAdditionalFoodsOfFood(
             @RequestParam long restaurantId,
             @PathVariable long foodId,
-            @RequestParam boolean isForCustomer
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int pageSize,
+            @RequestParam(defaultValue = "false") boolean isForCustomer
     ) {
         return ApiResponse.builder()
-                .data(foodService.getAdditionalFoodsOfFood(restaurantId, foodId, isForCustomer))
+                .data(foodService.getAdditionalFoodsOfFood(restaurantId, foodId, isForCustomer, page, pageSize))
+                .message("Success")
+                .code(200)
+                .build();
+    }
+
+    @PostMapping("/additional")
+    public ApiResponse<?> addAdditionalFoodsToFood(@RequestBody AddAdditionalFoodsRequest additionalFoodsRequest) {
+        foodService.addAdditionalFoodToFoodOfRestaurant(additionalFoodsRequest);
+        return ApiResponse.builder()
                 .message("Success")
                 .code(200)
                 .build();

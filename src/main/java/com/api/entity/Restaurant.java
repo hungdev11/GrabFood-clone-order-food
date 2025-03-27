@@ -62,7 +62,7 @@ public class Restaurant extends BaseEntity {
 
     @Builder.Default
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Food> vouchers = new ArrayList<>();
+    private List<Voucher> vouchers = new ArrayList<>();
 
     @PrePersist
     private void onCreate() {

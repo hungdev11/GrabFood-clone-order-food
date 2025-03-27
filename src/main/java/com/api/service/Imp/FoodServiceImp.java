@@ -1,15 +1,14 @@
 package com.api.service.Imp;
 
+import com.api.dto.request.AddAdditionalFoodsRequest;
 import com.api.dto.request.AddFoodRequest;
 import com.api.dto.request.AdjustFoodPriceRequest;
 import com.api.dto.response.GetFoodResponse;
 import com.api.dto.response.PageResponse;
+import com.api.entity.*;
 import com.api.exception.AppException;
 import com.api.exception.ErrorCode;
-import com.api.entity.Food;
-import com.api.entity.FoodDetail;
-import com.api.entity.FoodType;
-import com.api.entity.Restaurant;
+import com.api.repository.FoodMainAndAdditionalRepository;
 import com.api.repository.FoodRepository;
 import com.api.service.FoodService;
 import com.api.service.FoodTypeService;
@@ -29,6 +28,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -39,12 +40,13 @@ public class FoodServiceImp implements FoodService {
     private final FoodRepository foodRepository;
     private final FoodTypeService foodTypeService;
     private final RestaurantService restaurantService;
+    private final FoodMainAndAdditionalRepository foodMainAndAdditionalRepository;
 
     @Override
     @Transactional
     public long addFood(AddFoodRequest request) {
         log.info("Adding new food");
-        Restaurant restaurant = restaurantService.getRestaurant(request.getRestaurant_id());
+        Restaurant restaurant = restaurantService.getRestaurant(request.getRestaurantId());
         FoodType foodType = foodTypeService.getFoodTypeByName(request.getType());
 
         if (foodRepository.existsByRestaurantAndNameAndTypeAndKind(
@@ -236,18 +238,78 @@ public class FoodServiceImp implements FoodService {
     }
 
     @Override
-    public PageResponse<List<GetFoodResponse>> getAdditionalFoodsOfFood(long restaurantId, long foodId, boolean isForCustomer) {
-        log.info("Get food {} of restaurant {}, for customer {}", foodId, restaurantId, isForCustomer);
+    @Transactional
+    public void addAdditionalFoodToFoodOfRestaurant(AddAdditionalFoodsRequest request) {
+         log.info("Add additional foods to food {} of restaurant {}",request.getFoodId(), request.getRestaurantId());
+         Food food = getFoodByIdAndRestaurantId(request.getFoodId(), request.getRestaurantId());
+
+         if (food.getKind().equals(FoodKind.ADDITIONAL)) {
+             log.error("Cannot add additional to food {} because it is an additional food", request.getFoodId());
+             throw new AppException(ErrorCode.FOOD_ADDITIONAL);
+         }
+
+         Set<Integer> idList = request.getAdditionalFoodIds();
+         if (Objects.isNull(idList) || idList.isEmpty()) {
+             log.warn("Nothing to add to the food {}", request.getFoodId());
+             return;
+         }
+
+         for (Integer id : idList) {
+             Food additionalFood = getFoodByIdAndRestaurantId(id, request.getRestaurantId());
+             if (!additionalFood.getId().equals(food.getId()) && !additionalFood.getKind().equals(FoodKind.MAIN)) {
+                if (!foodMainAndAdditionalRepository.existsByMainFoodAndAdditionFood(food, additionalFood)) {
+                    log.info("Main {}, addition {}", food.getId(), additionalFood.getId());
+                    FoodMainAndAddition foodMainAndAddition = FoodMainAndAddition.builder()
+                            .mainFood(food)
+                            .additionFood(additionalFood)
+                            .build();
+                    food.getMainFoods().add(foodMainAndAddition);
+                    additionalFood.getAdditionFoods().add(foodMainAndAddition);
+                    foodMainAndAdditionalRepository.save(foodMainAndAddition);
+                }
+             }
+         }
+    }
+
+    @Override
+    public PageResponse<List<GetFoodResponse>> getAdditionalFoodsOfFood(long restaurantId, long foodId, boolean isForCustomer, int page, int pageSize) {
+        log.info("Get additional foods of food {} of restaurant {}, for customer {}", foodId, restaurantId, isForCustomer);
+        if (page < 0) {
+            log.warn("Invalid page number: {}. Defaulting to 0.", page);
+            page = 0;
+        }
+
         Food food = getFoodByIdAndRestaurantId(foodId, restaurantId);
+
+        if (food.getKind().equals(FoodKind.ADDITIONAL)) {
+            log.error("Cannot get additional of food {} because it is an additional food", food.getId());
+            throw new AppException(ErrorCode.FOOD_ADDITIONAL);
+        }
 
         if (isForCustomer && food.getStatus() == FoodStatus.INACTIVE) {
             log.error("Food id {} not public", foodId);
             throw new AppException(ErrorCode.FOOD_NOT_PUBLIC_FOR_CUSTOMER);
         }
 
-        // DO LATER
+        Pageable pageable = PageRequest.of(page, pageSize);
 
-        return null;
+        Stream<Food> foodStream = food.getMainFoods().stream()
+                .map(FoodMainAndAddition::getAdditionFood);
+
+        if (isForCustomer) {
+            foodStream = foodStream.filter(f -> f.getStatus() == FoodStatus.ACTIVE);
+        }
+
+        Page<Food> foodPage = PageUtils.convertListToPage(foodStream.toList(), pageable);
+
+        List<GetFoodResponse> foodResponses = foodResponsesToEndUser(foodPage, isForCustomer);
+
+        return PageResponse.<List<GetFoodResponse>>builder()
+                .page(page)
+                .size(pageSize)
+                .total(foodPage.getTotalElements())
+                .items(foodResponses)
+                .build();
     }
 
 //====================================================================================================================================

@@ -8,4 +8,5 @@ public interface RestaurantService {
     long addRestaurant(AddRestaurantRequest request);
     Restaurant getRestaurant(long id);
     RestaurantResponse getRestaurantResponse(long id);
+
 }

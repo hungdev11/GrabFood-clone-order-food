@@ -16,5 +16,5 @@ public class AddFoodRequest {
     private FoodKind kind;
     private String type;
     private BigDecimal price;
-    private long restaurant_id;
+    private long restaurantId;
 }

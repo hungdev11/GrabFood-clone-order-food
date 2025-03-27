@@ -52,5 +52,13 @@ public class Food extends BaseEntity {
     @Builder.Default
     @OneToMany(mappedBy = "food", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CartDetail> cartDetails = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "mainFood", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FoodMainAndAddition> mainFoods = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "additionFood", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FoodMainAndAddition> additionFoods = new ArrayList<>();
 }
 
